@@ -1,6 +1,7 @@
 package com.mbarros.tasktracker.domain;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 public class Task {
@@ -17,12 +18,12 @@ public class Task {
         validateDescription(description);
         this.description = description;
         this.status = status;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+        this.createdAt = createdAt.truncatedTo(ChronoUnit.SECONDS);
+        this.updatedAt = updatedAt.truncatedTo(ChronoUnit.SECONDS);
     }
 
     public static Task create(int id, String description) {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
         return new Task(id, description, TaskStatus.TODO, now, now);
     }
 
@@ -31,7 +32,7 @@ public class Task {
         Objects.requireNonNull(status, "Status cannot be null.");
         Objects.requireNonNull(createdAt, "Creation date cannot be null.");
         Objects.requireNonNull(updatedAt, "Update date cannot be null.");
-        return new Task(id, description, status, createdAt, updatedAt);
+        return new Task(id, description, status, createdAt.truncatedTo(ChronoUnit.SECONDS), updatedAt.truncatedTo(ChronoUnit.SECONDS));
     }
 
     public String getDescription() {
@@ -53,7 +54,7 @@ public class Task {
     public void updateDescription(String newDescription) {
         validateDescription(newDescription);
         this.description = newDescription;
-        this.updatedAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
     }
 
     public TaskStatus getStatus() {
@@ -62,12 +63,12 @@ public class Task {
 
     public void markInProgress() {
         this.status = TaskStatus.IN_PROGRESS;
-        this.updatedAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
     }
 
     public void markDone() {
         this.status = TaskStatus.DONE;
-        this.updatedAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
     }
 
     public LocalDateTime getCreatedAt() {
